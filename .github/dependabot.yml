@@ -12,6 +12,12 @@ updates:
   open-pull-requests-limit: 10
 
 - package-ecosystem: gomod
+  directory: "/kustomize"
+  schedule:
+    interval: "weekly"
+  open-pull-requests-limit: 10
+
+- package-ecosystem: gomod
   directory: "/kyaml"
   schedule:
     interval: "weekly"
