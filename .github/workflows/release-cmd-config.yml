@@ -44,7 +44,7 @@ jobs:
     steps:
       - name: Pin kyaml
         run: |
-          gorepomod pin kyaml
+          gorepomod pin kyaml --doIt
       - name: Build test
         run: |
           make install-local-tools
@@ -76,7 +76,7 @@ jobs:
       - name: Release cmd/config
         run: |
           make install-local-tools
-          gorepomod release cmd/config ${{ inputs.release_type }}
+          gorepomod release cmd/config ${{ inputs.release_type }} --doIt
       - name: Notify build result
         uses: ShaunLWM/action-join@master
         env:
