@@ -44,9 +44,9 @@ jobs:
     steps:
       - name: Pin kyaml, cmd/config, and api
         run: |
-          gorepomod pin kyaml
-          gorepomod pin cmd/config
-          gorepomod pin api
+          gorepomod pin kyaml --doIt
+          gorepomod pin cmd/config --doIt
+          gorepomod pin api --doIt
       - name: Build test
         run: |
           make install-local-tools
@@ -62,7 +62,8 @@ jobs:
     name: End-to-end Testing
     runs-on: ubuntu-latest
     steps:
-      - name: End-to-end testing   
+      - name: End-to-end testing
+        id: e2e_test
         run: make verify-kustomize-e2e
       - name: Notify build result
         uses: ShaunLWM/action-join@master
@@ -78,7 +79,7 @@ jobs:
       - name: Release kyaml
         run: |
           make install-local-tools
-          gorepomod release kustomize ${{ inputs.release_type }}
+          gorepomod release kustomize ${{ inputs.release_type }} --doIt
       - name: Notify build result
         uses: ShaunLWM/action-join@master
         env:
