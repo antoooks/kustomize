@@ -11,10 +11,12 @@ on:
           - minor
           - patch
         required: true
+        default: 'patch'
       release_branch:
         type: string
         description: release branch name "release-kyaml-v*"
         required: true
+        default: 'master'
 
 jobs:
   pre-build: 
@@ -30,6 +32,7 @@ jobs:
           ref: ${{ inputs.release_branch }}
       - name: Unit test
         id: unit_test
+        working-directory: $GITHUB_WORKSPACE
         run: |
           echo "Executing unit test"
           make test-unit-all >> "${GITHUB_OUTPUT}"
@@ -38,20 +41,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build test
+        working-directory: $GITHUB_WORKSPACE
         run: |
-          make install-local-tools
           make build-kustomize-api
   e2e-test:
     name: End-to-end Testing
     runs-on: ubuntu-latest
     steps:
       - name: End-to-end testing   
-        run: make verify-kustomize-e2e
+        working-directory: $GITHUB_WORKSPACE
+        run: |
+          make verify-kustomize-e2e
   release:
     name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Release kyaml
+        working-directory: $GITHUB_WORKSPACE
         run: |
           make install-local-tools
           gorepomod release kyaml ${{ inputs.release_type }}

@@ -11,10 +11,12 @@ on:
           - minor
           - patch
         required: true
+        default: 'patch'
       release_branch:
         type: string
         description: release branch name "release-kustomize-v*"
         required: true
+        default: 'master'
 
 jobs:
   pre-build: 
@@ -28,6 +30,7 @@ jobs:
           ref: ${{ inputs.release_branch }}
       - name: Unit test
         id: unit_test
+        working-directory: $GITHUB_WORKSPACE
         run: |
           echo "Executing unit test"
           make test-unit-all >> "${GITHUB_OUTPUT}"
@@ -35,14 +38,19 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Pin kyaml, cmd/config, and api
-        run: |
-          gorepomod pin kyaml --doIt
-          gorepomod pin cmd/config --doIt
-          gorepomod pin api --doIt
-      - name: Build test
+      - name: Install local tools
+        working-directory: $GITHUB_WORKSPACE
         run: |
           make install-local-tools
+      - name: Pin kyaml, cmd/config, and api
+        working-directory: $GITHUB_WORKSPACE
+        run: |
+          gorepomod pin kyaml --local --doIt
+          gorepomod pin cmd/config --local --doIt
+          gorepomod pin api --local --doIt
+      - name: Build test
+        working-directory: $GITHUB_WORKSPACE
+        run: |
           make build-kustomize-api
   e2e-test:
     name: End-to-end Testing
@@ -50,12 +58,15 @@ jobs:
     steps:
       - name: End-to-end testing
         id: e2e_test
-        run: make verify-kustomize-e2e
+        working-directory: $GITHUB_WORKSPACE
+        run: |
+          make verify-kustomize-e2e
   release:
     name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Release kyaml
+        working-directory: $GITHUB_WORKSPACE
         run: |
           make install-local-tools
           gorepomod release kustomize ${{ inputs.release_type }} --doIt
