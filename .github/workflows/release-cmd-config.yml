@@ -11,10 +11,12 @@ on:
           - minor
           - patch
         required: true
+        default: 'patch'
       release_branch:
         type: string
         description: release branch name "release-cmd/config-v*"
         required: true
+        default: 'master'
 
 jobs:
   pre-build: 
@@ -28,6 +30,7 @@ jobs:
           ref: ${{ inputs.release_branch }}
       - name: Unit test
         id: unit_test
+        working-directory: $GITHUB_WORKSPACE
         run: |
           echo "Executing unit test"
           make test-unit-all >> "${GITHUB_OUTPUT}"
@@ -35,24 +38,35 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Install local tools
+        working-directory: $GITHUB_WORKSPACE
+        run: |
+          make install-local-tools
       - name: Pin kyaml
+        working-directory: $GITHUB_WORKSPACE
         run: |
           gorepomod pin kyaml --doIt
       - name: Build test
+        working-directory: $GITHUB_WORKSPACE
         run: |
-          make install-local-tools
           make build-kustomize-api
   e2e-test:
     name: End-to-end Testing
     runs-on: ubuntu-latest
     steps:
       - name: End-to-end testing   
-        run: make verify-kustomize-e2e
+        working-directory: $GITHUB_WORKSPACE
+        run: | 
+          make verify-kustomize-e2e
   release:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: Release cmd/config
+      - name: Install local tools
+        working-directory: $GITHUB_WORKSPACE
         run: |
           make install-local-tools
+      - name: Release cmd/config
+        working-directory: $GITHUB_WORKSPACE
+        run: |
           gorepomod release cmd/config ${{ inputs.release_type }} --doIt
