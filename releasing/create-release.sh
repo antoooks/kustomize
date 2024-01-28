@@ -41,9 +41,11 @@ fi
 
 git_tag=$1
 release_type=$2
+release_branch="release-${git_tag}"
 
 echo "release tag: $git_tag"
 echo "release type: $release_type"
+echo "release branch: $release_branch"
 
 # Build the release binaries for every OS/arch combination.
 # It builds compressed artifacts on $release_dir.
@@ -94,7 +96,7 @@ function build_kustomize_binary {
 }
 
 function create_release {
-  source ./helpers.sh
+  source ./releasing/helpers.sh
 
   git_tag=$1
 
@@ -112,12 +114,9 @@ function create_release {
   # Generate the changelog for this release
   # using the last two tags for the module
   changelog_file=$(mktemp)
-  ./releasing/compile-changelog.sh "$module" "$git_tag" "$changelog_file"
+  ./releasing/compile-changelog.sh "$module" "HEAD" "$changelog_file"
 
   additional_release_artifacts_arg=""
-
-  echo "release tag: $git_tag"
-  createBranch $git_tag "creating release branch $git_tag..."
 
   # Trigger workflow for respective modeule release
   gh workflow run "release-${module}" -f "release_type=${release_type}" -f "release_branch=${git_tag}"
