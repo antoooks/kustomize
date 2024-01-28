@@ -2,7 +2,6 @@
 # Copyright 2022 The Kubernetes Authors.
 # SPDX-License-Identifier: Apache-2.0
 
-ORIGIN_REPO="origin"
 ORIGIN_MASTER="feat/5449-add-release-automation"
 UPSTREAM_REPO="upstream"
 UPSTREAM_MASTER="master"
@@ -14,7 +13,7 @@ function createBranch {
   # Check if release branch exists
   if git show-ref --quiet "refs/heads/${branch}"; then
     git fetch --tags upstream master
-    git checkout $ORIGIN_REPO $ORIGIN_MASTER
+    git checkout $ORIGIN_MASTER
     git branch -D $branch  # delete if it exists
   fi
   git checkout -b $branch
