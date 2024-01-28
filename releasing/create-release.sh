@@ -105,6 +105,10 @@ function create_release {
   # Take everything after the last slash.
   version=${git_tag##*/}
 
+  # Create release branch release-{module}/{version}
+  echo "Creating release..."
+  createBranch $release_branch "create release branch $release_branch"
+
   # Generate the changelog for this release
   # using the last two tags for the module
   changelog_file=$(mktemp)
