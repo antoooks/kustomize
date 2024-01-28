@@ -10,7 +10,7 @@ require (
 	github.com/monochromegane/go-gitignore v0.0.0-20200626010858-205db1a8cc00
 	github.com/sergi/go-diff v1.1.0
 	github.com/spf13/cobra v1.7.0
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.4
 	github.com/xlab/treeprint v1.2.0
 	go.starlark.net v0.0.0-20200306205701-8dd3e2ee1dd5
 	golang.org/x/sys v0.13.0
