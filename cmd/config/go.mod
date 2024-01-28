@@ -3,7 +3,7 @@ module sigs.k8s.io/kustomize/cmd/config
 go 1.20
 
 require (
-	github.com/go-errors/errors v1.4.2
+	github.com/go-errors/errors v1.5.1
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.1
 	gopkg.in/inf.v0 v0.9.1
