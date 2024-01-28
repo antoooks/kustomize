@@ -8,7 +8,7 @@ require (
 	github.com/google/gnostic-models v0.6.8
 	github.com/google/go-cmp v0.5.9
 	github.com/monochromegane/go-gitignore v0.0.0-20200626010858-205db1a8cc00
-	github.com/sergi/go-diff v1.1.0
+	github.com/sergi/go-diff v1.3.1
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.1
 	github.com/xlab/treeprint v1.2.0
