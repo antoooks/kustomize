@@ -119,7 +119,7 @@ function create_release {
   additional_release_artifacts_arg=""
 
   # Trigger workflow for respective modeule release
-  gh workflow run "release-${module}" -f "release_type=${release_type}" -f "release_branch=${git_tag}"
+  gh workflow run "release-${module}.yml" -f "release_type=${release_type}" -f "release_branch=${release_branch}"
 
   # build `kustomize` binary
   if [[ "$module" == "kustomize" ]]; then
