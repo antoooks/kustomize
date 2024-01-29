@@ -48,6 +48,15 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Fetch changes
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.release_branch }}
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.work
       - name: Build test
         run: |
           make build-kustomize-api
@@ -55,6 +64,15 @@ jobs:
     name: End-to-end Testing
     runs-on: ubuntu-latest
     steps:
+      - name: Fetch changes
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.release_branch }}
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.work
       - name: End-to-end testing   
         run: |
           make verify-kustomize-e2e
@@ -62,6 +80,15 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
+      - name: Fetch changes
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.release_branch }}
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.work
       - name: Release kyaml
         working-directory: $GITHUB_WORKSPACE
         run: |
