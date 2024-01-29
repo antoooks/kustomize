@@ -78,6 +78,11 @@ jobs:
       - name: Set up docker
         uses: docker-practice/actions-setup-docker@master
         timeout-minutes: 12
+      - name: Set up podman
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: podman
+          version: 1.0
       - name: End-to-end testing   
         run: |
           make verify-kustomize-e2e
