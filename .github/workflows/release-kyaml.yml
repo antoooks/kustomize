@@ -65,8 +65,6 @@ jobs:
     name: End-to-end Testing
     needs: build
     runs-on: ubuntu-latest
-    container:
-      image: docker:25.0-dind
     steps:
       - name: Fetch changes
         uses: actions/checkout@v4
@@ -77,6 +75,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: go.work
+      - name: Set up docker
+        uses: docker-practice/actions-setup-docker@master
+        timeout-minutes: 12
       - name: End-to-end testing   
         run: |
           make verify-kustomize-e2e
