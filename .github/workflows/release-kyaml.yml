@@ -22,26 +22,33 @@ jobs:
   pre-build: 
     name: Pre-build
     runs-on: ubuntu-latest
-    outputs:
-        unit_test_result: ${{ steps.unit_test.outputs }}
     steps:
       - name: Fetch changes
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ inputs.release_branch }}
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.work
       - name: Unit test
         id: unit_test
-        working-directory: $GITHUB_WORKSPACE
         run: |
           echo "Executing unit test"
-          make test-unit-all >> "${GITHUB_OUTPUT}"
+          go install github.com/jstemmer/go-junit-report@latest
+          make test-unit-all | go-junit-report -set-exit-code > report.xml
+      - name: Test Summary
+        uses: test-summary/action@v1
+        with:
+          paths: |
+            ./report.xml      
+        if: always()
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Build test
-        working-directory: $GITHUB_WORKSPACE
         run: |
           make build-kustomize-api
   e2e-test:
@@ -49,7 +56,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: End-to-end testing   
-        working-directory: $GITHUB_WORKSPACE
         run: |
           make verify-kustomize-e2e
   release:
@@ -59,5 +65,5 @@ jobs:
       - name: Release kyaml
         working-directory: $GITHUB_WORKSPACE
         run: |
-          make install-local-tools
+          make install-tools
           gorepomod release kyaml ${{ inputs.release_type }}
