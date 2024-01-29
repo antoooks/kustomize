@@ -46,6 +46,7 @@ jobs:
         if: always()
   build:
     name: Build
+    needs: pre-build
     runs-on: ubuntu-latest
     steps:
       - name: Fetch changes
@@ -62,6 +63,7 @@ jobs:
           make build-kustomize-api
   e2e-test:
     name: End-to-end Testing
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Fetch changes
@@ -78,6 +80,7 @@ jobs:
           make verify-kustomize-e2e
   release:
     name: Release
+    needs: e2e-test
     runs-on: ubuntu-latest
     steps:
       - name: Fetch changes
