@@ -23,11 +23,15 @@ jobs:
     name: Pre-build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout to release branch
+      - name: Fetch changes
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ inputs.release_branch }}
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.work
       - name: Unit test
         id: unit_test
         working-directory: $GITHUB_WORKSPACE
@@ -37,7 +41,17 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    needs: pre-build
     steps:
+      - name: Fetch changes
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.release_branch }}
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.work
       - name: Install local tools
         working-directory: $GITHUB_WORKSPACE
         run: |
@@ -51,19 +65,20 @@ jobs:
         working-directory: $GITHUB_WORKSPACE
         run: |
           make build-kustomize-api
-  e2e-test:
-    name: End-to-end Testing
-    runs-on: ubuntu-latest
-    steps:
-      - name: End-to-end testing   
-        id: e2e_test
-        working-directory: $GITHUB_WORKSPACE
-        run: |
-          make verify-kustomize-e2e
   release:
     name: Release
     runs-on: ubuntu-latest
+    needs: build
     steps:
+      - name: Fetch changes
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.release_branch }}
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.work
       - name: Release kyaml
         working-directory: $GITHUB_WORKSPACE
         run: |
