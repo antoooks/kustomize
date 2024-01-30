@@ -79,5 +79,7 @@ jobs:
           go-version-file: go.work
       - name: Release kyaml
         run: |
+          git config --global user.email "development@email.com"
+          git config --global user.name "Development"
           make install-tools
           gorepomod release kyaml ${{ inputs.release_type }} --local --doIt
