@@ -80,4 +80,4 @@ jobs:
           make install-local-tools
       - name: Release cmd/config
         run: |
-          gorepomod release cmd/config ${{ inputs.release_type }} --doIt
+          gorepomod release cmd/config ${{ inputs.release_type }} --local --doIt
