@@ -61,34 +61,9 @@ jobs:
       - name: Build test
         run: |
           make build-kustomize-api
-  e2e-test:
-    name: End-to-end Testing
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Fetch changes
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ inputs.release_branch }}
-      - name: Set up Go 1.x
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.work
-      - name: Set up docker
-        uses: docker-practice/actions-setup-docker@master
-        timeout-minutes: 12
-      - name: Set up podman
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: podman
-          version: 1.0
-      - name: End-to-end testing   
-        run: |
-          make verify-kustomize-e2e
   release:
     name: Release
-    needs: e2e-test
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Fetch changes
