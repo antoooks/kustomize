@@ -78,4 +78,4 @@ jobs:
       - name: Release kyaml
         run: |
           make install-tools
-          gorepomod release kyaml ${{ inputs.release_type }}
+          gorepomod release kyaml ${{ inputs.release_type }} --local --doIt

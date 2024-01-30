@@ -76,4 +76,4 @@ jobs:
       - name: Release kyaml
         run: |
           make install-local-tools
-          gorepomod release kustomize ${{ inputs.release_type }} --doIt
+          gorepomod release kustomize ${{ inputs.release_type }} --local  --doIt

@@ -57,8 +57,8 @@ jobs:
           make install-local-tools
       - name: Pin kyaml, cmd/config
         run: |
-          gorepomod pin kyaml --doIt
-          gorepomod pin cmd/config --doIt
+          gorepomod pin kyaml --local --doIt
+          gorepomod pin cmd/config --local --doIt
       - name: Build api
         run: |
           make build-kustomize-api
@@ -79,4 +79,4 @@ jobs:
       - name: Release kyaml
         run: |
           make install-local-tools
-          gorepomod release kyaml ${{ inputs.release_type }} --doIt
+          gorepomod release kyaml ${{ inputs.release_type }} --local --doIt
