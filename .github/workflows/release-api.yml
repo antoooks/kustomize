@@ -53,16 +53,13 @@ jobs:
         with:
           go-version-file: go.work
       - name: Install local tools
-        working-directory: $GITHUB_WORKSPACE
         run: |
           make install-local-tools
       - name: Pin kyaml, cmd/config
-        working-directory: $GITHUB_WORKSPACE
         run: |
           gorepomod pin kyaml --doIt
           gorepomod pin cmd/config --doIt
       - name: Build api
-        working-directory: $GITHUB_WORKSPACE
         run: |
           make build-kustomize-api
   release:
@@ -80,7 +77,6 @@ jobs:
         with:
           go-version-file: go.work
       - name: Release kyaml
-        working-directory: $GITHUB_WORKSPACE
         run: |
           make install-local-tools
           gorepomod release kyaml ${{ inputs.release_type }} --doIt

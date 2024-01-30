@@ -76,7 +76,6 @@ jobs:
         with:
           go-version-file: go.work
       - name: Release kyaml
-        working-directory: $GITHUB_WORKSPACE
         run: |
           make install-tools
           gorepomod release kyaml ${{ inputs.release_type }}
