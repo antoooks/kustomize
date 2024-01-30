@@ -66,6 +66,8 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      contents: write
     steps:
       - name: Fetch changes
         uses: actions/checkout@v4
