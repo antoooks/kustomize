@@ -57,7 +57,7 @@ jobs:
           make install-local-tools
       - name: Pin kyaml
         run: |
-          gorepomod pin kyaml --doIt
+          gorepomod pin kyaml --local --doIt
       - name: Build test
         run: |
           make build-kustomize-api
