@@ -75,7 +75,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: go.work
-      - name: Release kyaml
+      - name: Release kustomize
         run: |
+          git config --global user.email "development@kustomize.io"
+          git config --global user.name "Development"
           make install-local-tools
           gorepomod release kustomize ${{ inputs.release_type }} --local  --doIt

@@ -82,4 +82,7 @@ jobs:
           make install-local-tools
       - name: Release cmd/config
         run: |
+          git config --global user.email "development@kustomize.io"
+          git config --global user.name "Development"
+          make install-local-tools
           gorepomod release cmd/config ${{ inputs.release_type }} --local --doIt
