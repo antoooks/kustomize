@@ -57,6 +57,8 @@ jobs:
           make install-local-tools
       - name: Pin kyaml
         run: |
+          git remote add upstream git@github.com:kubernetes-sigs/kustomize.git
+          git remote -v 
           gorepomod pin kyaml --local --doIt
       - name: Build test
         run: |
