@@ -105,7 +105,11 @@ jobs:
           cache-dependency-path: "**/*.sum"
       - name: Release cmd/config
         run: |
-          
+
+          # Prepare git
+          git config --global user.email "development@kustomize.io"
+          git config --global user.name "Development"  
+
           # Release cmd/config
           make install-local-tools
           gorepomod release cmd/config ${{ inputs.release_type }} --local --doIt
