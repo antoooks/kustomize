@@ -114,7 +114,7 @@ function create_release {
   # Generate the changelog for this release
   # using the last two tags for the module
   changelog_file=$(mktemp)
-  ./releasing/compile-changelog.sh "$module" "HEAD" "$changelog_file"
+  ./releasing/compile-changelog.sh "${module}" "${git_tag}" "${changelog_file}"
 
   additional_release_artifacts_arg=""
 
@@ -124,7 +124,7 @@ function create_release {
   # build `kustomize` binary
   if [[ "$module" == "kustomize" ]]; then
     release_artifact_dir=$(mktemp -d)
-    build_kustomize_binary "$version" "$release_artifact_dir"
+    build_kustomize_binary "$nextVersion" "$release_artifact_dir"
 
     # additional_release_artifacts_arg+="$release_artifact_dir/*"
     additional_release_artifacts_arg=("$release_artifact_dir"/*)
