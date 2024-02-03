@@ -24,6 +24,7 @@ set -o nounset
 set -o pipefail
 
 declare -a RELEASE_TYPES=("major" "minor" "patch")
+upstream_master="master"
 origin_master="master"
 
 if [[ -z "${1-}" ]]; then
@@ -112,9 +113,10 @@ function create_release {
   release_branch="release-${module}/${nextVersion}"
 
   # Create release branch release-{module}/{version}
-  echo "Creating release..."
+  echo "Creating release branch $release_branch..."
+  git fetch --tags upstream $upstream_master
   git branch $release_branch $origin_master
-  git commit -a -m "create release branch $release_branch"
+  git commit -a -m "create release branch $release_branch" || true
   git push -f origin $release_branch
 
   # Generate the changelog for this release
