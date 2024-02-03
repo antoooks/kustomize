@@ -91,13 +91,16 @@ jobs:
         with:
           go-version-file: go.work
           cache-dependency-path: "**/*.sum"
-      - name: Release kyaml
+      - name: Create release changelog
         run: |
-        
+
           # Prepare git
           git config --global user.email "development@kustomize.io"
           git config --global user.name "Development"
-          
+          ./releasing/compile-changelog.sh kustomize HEAD
+      - name: Release kyaml
+        run: |
+
           # Release kustomize
           make install-local-tools
           gorepomod release kustomize ${{ inputs.release_type }} --local  --doIt

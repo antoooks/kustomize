@@ -103,12 +103,15 @@ jobs:
         with:
           go-version-file: go.work
           cache-dependency-path: "**/*.sum"
-      - name: Release cmd/config
+      - name: Create release draft
         run: |
 
           # Prepare git
           git config --global user.email "development@kustomize.io"
-          git config --global user.name "Development"  
+          git config --global user.name "Development"
+          ./releasing/compile-changelog.sh cmd/config HEAD
+      - name: Release cmd/config
+        run: |
 
           # Release cmd/config
           make install-local-tools

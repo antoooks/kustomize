@@ -94,25 +94,16 @@ jobs:
         with:
           go-version-file: go.work
           cache-dependency-path: "**/*.sum"
-      - name: Pin kyaml, cmd/config
+      - name: Create release draft
         run: |
 
           # Prepare git
           git config --global user.email "development@kustomize.io"
           git config --global user.name "Development"
-          git remote add upstream "https://x-access-token:${GITHUB_TOKEN}@github.com/antoooks/kustomize.git"
-          git remote -v 
-          
-          # Pin dependencies: kyaml, cmd/config
-          gorepomod pin kyaml --local --doIt
-          gorepomod pin cmd/config --local --doIt
+          ./releasing/compile-changelog.sh api HEAD
       - name: Release api
         run: |
 
-          # Prepare git
-          git config --global user.email "development@kustomize.io"
-          git config --global user.name "Development"
-          
           # Release api
           make install-local-tools
           gorepomod release api ${{ inputs.release_type }} --local --doIt
