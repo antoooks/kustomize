@@ -258,7 +258,7 @@ func (gr *Runner) AssureOnMainBranch() error {
 // CheckoutMainBranch does that.
 func (gr *Runner) CheckoutMainBranch() error {
 	gr.comment("checking out main branch")
-	fullBranchSpec := fmt.Sprintf("%s/%s", "origin", mainBranch)
+	fullBranchSpec := fmt.Sprintf("%s/%s", remoteOrigin, mainBranch)
 	return gr.runNoOut(noHarmDone, "checkout", fullBranchSpec)
 }
 
@@ -278,9 +278,8 @@ func (gr *Runner) FetchRemote(remote misc.TrackedRepo) error {
 
 // MergeFromRemoteMain does a fast forward only merge with main branch.
 func (gr *Runner) MergeFromRemoteMain(remote misc.TrackedRepo) error {
-	fullBranchSpec := fmt.Sprintf("%s/%s", "origin", mainBranch)
 	remo := strings.Join(
-		[]string{string(remote), fullBranchSpec}, pathSep)
+		[]string{string(remote), mainBranch}, pathSep)
 	gr.comment("merging from remote")
 	return gr.runNoOut(undoPainful, "merge", "--ff-only", remo)
 }
