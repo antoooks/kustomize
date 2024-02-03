@@ -42,6 +42,8 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     needs: pre-build
+    permissions:
+      contents: write
     steps:
       - name: Fetch changes
         uses: actions/checkout@v4
@@ -57,7 +59,7 @@ jobs:
           make install-local-tools
       - name: Pin kyaml
         run: |
-          git remote add upstream git@github.com:kubernetes-sigs/kustomize.git
+          git remote add upstream git@github.com:antoooks/kustomize.git
           git remote -v 
           gorepomod pin kyaml --local --doIt
       - name: Build test
