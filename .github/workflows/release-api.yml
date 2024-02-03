@@ -108,6 +108,10 @@ jobs:
           gorepomod pin cmd/config --local --doIt
       - name: Release api
         run: |
+
+          # Prepare git
+          git config --global user.email "development@kustomize.io"
+          git config --global user.name "Development"
           
           # Release api
           make install-local-tools

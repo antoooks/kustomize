@@ -93,7 +93,11 @@ jobs:
           cache-dependency-path: "**/*.sum"
       - name: Release kyaml
         run: |
-
+        
+          # Prepare git
+          git config --global user.email "development@kustomize.io"
+          git config --global user.name "Development"
+          
           # Release kustomize
           make install-local-tools
           gorepomod release kustomize ${{ inputs.release_type }} --local  --doIt
