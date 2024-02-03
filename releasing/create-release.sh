@@ -96,13 +96,12 @@ function create_release {
   module=$1
   module_slugified=$(echo $module | iconv -t ascii//TRANSLIT | sed -E -e 's/[^[:alnum:]]+/-/g' -e 's/^-+|-+$//g' | tr '[:upper:]' '[:lower:]')
 
-  # Take everything after the last slash.
-  version=${git_tag##*/}
-
   determineNextVersion $@
 
   release_branch="release-${module}/${nextVersion}"
   git_tag="${module}/${nextVersion}"
+
+  echo "tag: ${git_tag}"
 
   # Create release branch release-{module}/{version}
   echo "Creating release branch $release_branch..."
