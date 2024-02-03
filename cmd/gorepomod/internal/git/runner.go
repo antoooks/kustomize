@@ -278,8 +278,9 @@ func (gr *Runner) FetchRemote(remote misc.TrackedRepo) error {
 
 // MergeFromRemoteMain does a fast forward only merge with main branch.
 func (gr *Runner) MergeFromRemoteMain(remote misc.TrackedRepo) error {
+	fullBranchSpec := fmt.Sprintf("%s/%s", "origin", mainBranch)
 	remo := strings.Join(
-		[]string{string(remote), mainBranch}, pathSep)
+		[]string{string(remote), fullBranchSpec}, pathSep)
 	gr.comment("merging from remote")
 	return gr.runNoOut(undoPainful, "merge", "--ff-only", remo)
 }
