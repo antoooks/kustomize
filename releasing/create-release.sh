@@ -27,12 +27,6 @@ declare -a RELEASE_TYPES=("major" "minor" "patch")
 upstream_master="master"
 origin_master="master"
 
-if [[ -z "${1-}" ]]; then
-  echo "Usage: $0 TAG"
-  echo "  TAG: the tag to build or release, e.g. api/v1.2.3"
-  exit 1
-fi
-
 if [[ -z "${2-}" ]]; then
   echo "Release type not specified, using default value: patch"
   release_type="patch"
@@ -40,12 +34,6 @@ elif [[ ! "${RELEASE_TYPES[*]}" =~ "${2}" ]]; then
   echo "Unsupported release type, only input these values: major, minor, patch."
   exit 1
 fi
-
-git_tag=$1
-release_type=$2
-
-echo "release tag: $git_tag"
-echo "release type: $release_type"
 
 # Build the release binaries for every OS/arch combination.
 # It builds compressed artifacts on $release_dir.
@@ -96,21 +84,11 @@ function build_kustomize_binary {
 }
 
 function create_release {
-  source ./releasing/helpers.sh
-
-  git_tag=$1
 
   # Take everything before the last slash.
   # This is expected to match $module.
   module=${git_tag%/*}
   module_slugified=$(echo $module | iconv -t ascii//TRANSLIT | sed -E -e 's/[^[:alnum:]]+/-/g' -e 's/^-+|-+$//g' | tr '[:upper:]' '[:lower:]')
-
-  # Take everything after the last slash.
-  version=${git_tag##*/}
-
-  determineNextVersion $@
-
-  release_branch="release-${module}/${nextVersion}"
 
   # Create release branch release-{module}/{version}
   echo "Creating release branch $release_branch..."
@@ -118,11 +96,6 @@ function create_release {
   git branch $release_branch $origin_master
   git commit -a -m "create release branch $release_branch" || true
   git push -f origin $release_branch
-
-  # Generate the changelog for this release
-  # using the last two tags for the module
-  changelog_file=$(mktemp)
-  ./releasing/compile-changelog.sh "$module" "HEAD" "$changelog_file"
 
   additional_release_artifacts_arg=""
 
@@ -132,7 +105,7 @@ function create_release {
   # build `kustomize` binary
   if [[ "$module" == "kustomize" ]]; then
     release_artifact_dir=$(mktemp -d)
-    build_kustomize_binary "$version" "$release_artifact_dir"
+    build_kustomize_binary "$nextVersion" "$release_artifact_dir"
 
     # additional_release_artifacts_arg+="$release_artifact_dir/*"
     additional_release_artifacts_arg=("$release_artifact_dir"/*)
@@ -155,6 +128,7 @@ function create_release {
 }
 
 function determineNextVersion {
+    module=$1
     currentTag=$(git tag --list "${module}*"  --sort=-creatordate | head -n1)
     currentVersion=$(echo ${currentTag##*/} | cut -d'v' -f2)
     majorVer=$(echo $currentVersion | cut -d'.' -f1)
@@ -172,9 +146,24 @@ function determineNextVersion {
       exit 1
     fi
 
-    nextVersion="$majorVer.$minorVer.$patchVer"
-    return 
+    echo "$majorVer.$minorVer.$patchVer"
 }
 
-## create release
-create_release "$git_tag"
+main() {
+
+  module=$1
+  release_type=$2
+  nextVersion=$(determineNextVersion $module)
+
+  release_branch="release-${module}/${nextVersion}"
+  git_tag="${module}/${nextVersion}"
+
+  echo "module: $module"
+  echo "release type: $release_type"
+  echo "tag: ${git_tag}"
+  
+  ## create release
+  create_release "$git_tag"
+}
+
+main $@
