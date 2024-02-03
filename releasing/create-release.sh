@@ -101,11 +101,12 @@ function create_release {
   # Take everything before the last slash.
   # This is expected to match $module.
   module=${git_tag%/*}
+  module_slugified=$(echo $module | iconv -t ascii//TRANSLIT | sed -E -e 's/[^[:alnum:]]+/-/g' -e 's/^-+|-+$//g' | tr '[:upper:]' '[:lower:]')
 
   # Take everything after the last slash.
   version=${git_tag##*/}
 
-  release_branch="release-${module}-${version}"
+  release_branch="release-${module}/${version}"
 
   # Create release branch release-{module}/{version}
   echo "Creating release..."
@@ -119,7 +120,7 @@ function create_release {
   additional_release_artifacts_arg=""
 
   # Trigger workflow for respective modeule release
-  gh workflow run "release-${module}.yml" -f "release_type=${release_type}" -f "release_branch=${release_branch}"
+  gh workflow run "release-${module_slugified}.yml" -f "release_type=${release_type}" -f "release_branch=${release_branch}"
 
   # build `kustomize` binary
   if [[ "$module" == "kustomize" ]]; then
