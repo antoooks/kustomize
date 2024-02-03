@@ -41,11 +41,9 @@ fi
 
 git_tag=$1
 release_type=$2
-release_branch="release-${git_tag}"
 
 echo "release tag: $git_tag"
 echo "release type: $release_type"
-echo "release branch: $release_branch"
 
 # Build the release binaries for every OS/arch combination.
 # It builds compressed artifacts on $release_dir.
@@ -103,9 +101,12 @@ function create_release {
   # Take everything before the last slash.
   # This is expected to match $module.
   module=${git_tag%/*}
+  module_slugified=$(echo $module | iconv -t ascii//TRANSLIT | sed -E -e 's/[^[:alnum:]]+/-/g' -e 's/^-+|-+$//g' | tr '[:upper:]' '[:lower:]')
 
   # Take everything after the last slash.
   version=${git_tag##*/}
+
+  release_branch="release-${module_slugified}/${version}"
 
   # Create release branch release-{module}/{version}
   echo "Creating release..."
