@@ -27,12 +27,6 @@ declare -a RELEASE_TYPES=("major" "minor" "patch")
 upstream_master="master"
 origin_master="master"
 
-if [[ -z "${1-}" ]]; then
-  echo "Usage: $0 TAG"
-  echo "  TAG: the tag to build or release, e.g. api/v1.2.3"
-  exit 1
-fi
-
 if [[ -z "${2-}" ]]; then
   echo "Release type not specified, using default value: patch"
   release_type="patch"
@@ -41,10 +35,10 @@ elif [[ ! "${RELEASE_TYPES[*]}" =~ "${2}" ]]; then
   exit 1
 fi
 
-git_tag=$1
+module=$1
 release_type=$2
 
-echo "release tag: $git_tag"
+echo "module: $module"
 echo "release type: $release_type"
 
 # Build the release binaries for every OS/arch combination.
@@ -96,13 +90,10 @@ function build_kustomize_binary {
 }
 
 function create_release {
-  source ./releasing/helpers.sh
-
-  git_tag=$1
 
   # Take everything before the last slash.
   # This is expected to match $module.
-  module=${git_tag%/*}
+  module=$1
   module_slugified=$(echo $module | iconv -t ascii//TRANSLIT | sed -E -e 's/[^[:alnum:]]+/-/g' -e 's/^-+|-+$//g' | tr '[:upper:]' '[:lower:]')
 
   # Take everything after the last slash.
@@ -111,6 +102,7 @@ function create_release {
   determineNextVersion $@
 
   release_branch="release-${module}/${nextVersion}"
+  git_tag="${module}/${nextVersion}"
 
   # Create release branch release-{module}/{version}
   echo "Creating release branch $release_branch..."
