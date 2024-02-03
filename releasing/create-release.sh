@@ -155,7 +155,7 @@ main() {
   release_type=$2
   nextVersion=$(determineNextVersion $module)
 
-  release_branch="release-${module}/${nextVersion}"
+  release_branch="release-${module}/v${nextVersion}"
   git_tag="${module}/${nextVersion}"
 
   echo "module: $module"
