@@ -24,6 +24,7 @@ set -o nounset
 set -o pipefail
 
 declare -a RELEASE_TYPES=("major" "minor" "patch")
+origin_master="master"
 
 if [[ -z "${1-}" ]]; then
   echo "Usage: $0 TAG"
@@ -112,7 +113,9 @@ function create_release {
 
   # Create release branch release-{module}/{version}
   echo "Creating release..."
-  createBranch $release_branch "create release branch $release_branch"
+  git branch $release_branch $origin_master
+  git commit -a -m "create release branch $release_branch"
+  git push -f origin $release_branch
 
   # Generate the changelog for this release
   # using the last two tags for the module
