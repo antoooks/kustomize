@@ -71,6 +71,8 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     needs: build
+    env:
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
     permissions:
       contents: write
     steps:
@@ -86,6 +88,11 @@ jobs:
       - name: Install local tools
         run: |
           make install-local-tools
+      - name: Pin kyaml
+        run: |
+          git remote add upstream "https://x-access-token:${GITHUB_TOKEN}@github.com/antoooks/kustomize.git"
+          git remote -v 
+          gorepomod pin kyaml --local --doIt
       - name: Release cmd/config
         run: |
           gorepomod release cmd/config ${{ inputs.release_type }} --local --doIt
