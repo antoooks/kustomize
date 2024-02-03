@@ -16,6 +16,7 @@ require (
 )
 
 require (
+	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
 	github.com/go-errors/errors v1.4.2 // indirect
@@ -45,5 +46,3 @@ require (
 replace sigs.k8s.io/kustomize/api => ../api
 
 replace sigs.k8s.io/kustomize/cmd/config => ../cmd/config
-
-replace sigs.k8s.io/kustomize/kyaml => ../kyaml
