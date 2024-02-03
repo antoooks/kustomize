@@ -94,10 +94,10 @@ jobs:
           git config --global user.name "Development"
           git remote add upstream "https://x-access-token:${GITHUB_TOKEN}@github.com/antoooks/kustomize.git"
           git remote -v 
+          gorepomod pin kyaml --local --doIt
           git add --all
           git commit -m "pin kyaml" || true
           git push
-          gorepomod pin kyaml --local --doIt
       - name: Release cmd/config
         run: |
           gorepomod release cmd/config ${{ inputs.release_type }} --local --doIt
