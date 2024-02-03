@@ -106,7 +106,9 @@ function create_release {
   # Take everything after the last slash.
   version=${git_tag##*/}
 
-  release_branch="release-${module}/${version}"
+  determineNextVersion $@
+
+  release_branch="release-${module}/${nextVersion}"
 
   # Create release branch release-{module}/{version}
   echo "Creating release..."
@@ -145,6 +147,28 @@ function create_release {
     --title "$git_tag"\
     --draft \
     --notes-file "$changelog_file"
+}
+
+function determineNextVersion {
+    currentTag=$(git tag --list "${module}*"  --sort=-creatordate | head -n1)
+    currentVersion=$(echo ${currentTag##*/} | cut -d'v' -f2)
+    majorVer=$(echo $currentVersion | cut -d'.' -f1)
+    minorVer=$(echo $currentVersion | cut -d'.' -f2)
+    patchVer=$(echo $currentVersion | cut -d'.' -f3)
+
+    if [[ ${release_type} == "major" ]]; then
+      majorVer="$(($majorVer + 1))"
+    elif [[ ${release_type} == "minor" ]]; then
+      minorVer="$(($minorVer + 1))"
+    elif [[ ${release_type} == "patch" ]]; then
+      patchVer="$(($patchVer + 1))"
+    else
+      echo "Error: release_type not supported. Available values 'major', 'minor', 'patch'"
+      exit 1
+    fi
+
+    nextVersion="$majorVer.$minorVer.$patchVer"
+    return 
 }
 
 ## create release
