@@ -90,6 +90,8 @@ jobs:
           make install-local-tools
       - name: Pin kyaml
         run: |
+          git config --global user.email "development@email.com"
+          git config --global user.name "Development"
           git remote add upstream "https://x-access-token:${GITHUB_TOKEN}@github.com/antoooks/kustomize.git"
           git remote -v 
           gorepomod pin kyaml --local --doIt
