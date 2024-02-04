@@ -124,10 +124,7 @@ jobs:
 
           # Create release draft
           changelog_file=$(mktemp)
-          currentBranch=$(git describe --tags)
-          module=$(echo "${currentBranch}" | cut -d'-' -f1)
-          version=${currentBranch##*-}
-          currentTag="${module}/${version}"
+          currentTag=$(git describe --tags)
           ./releasing/compile-changelog.sh "cmd/config" "${currentTag}" "${changelog_file}"
 
           # Create github releases
