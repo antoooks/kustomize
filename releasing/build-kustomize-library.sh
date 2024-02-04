@@ -52,10 +52,8 @@ function build_kustomize_binary {
 
 main() {
 
-  currentBranch=$(git describe --tags)
-  module=$(echo "${currentBranch}" | cut -d'-' -f1)
-  version=${currentBranch##*-}
-  currentTag="${module}/${version}"
+  currentTag=$(git describe --tags)
+  version=${currentTag##*/}
   
   if grep -q -E '^[0-9]+(\.[0-9]+)*$' <<< "$version"
   then
