@@ -389,3 +389,11 @@ func (gr *Runner) GetLatestTag(releaseBranch string) (string, error) {
 func (gr *Runner) GetMainBranch() string {
 	return string(mainBranch)
 }
+
+func (gr *Runner) GetCurrentVersion() string {
+	currentVersion, err := gr.run(noHarmDone, "rev-parse", "--abbrev-ref", "HEAD")
+	if err != nil {
+		_ = fmt.Errorf("error getting current version")
+	}
+	return currentVersion
+}
