@@ -391,9 +391,11 @@ func (gr *Runner) GetMainBranch() string {
 }
 
 func (gr *Runner) GetCurrentVersion() string {
-	currentVersion, err := gr.run(noHarmDone, "rev-parse", "--abbrev-ref", "HEAD")
+	currentBranchName, err := gr.run(noHarmDone, "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
 		_ = fmt.Errorf("error getting current version")
 	}
-	return currentVersion
+	// Assuming release branch has this format: release-path/to/module-vX.Y.Z
+	splitBranchName := strings.Split(currentBranchName, "-")
+	return splitBranchName[len(splitBranchName)-1]
 }
