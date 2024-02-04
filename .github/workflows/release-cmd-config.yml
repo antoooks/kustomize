@@ -112,15 +112,15 @@ jobs:
       - name: Release cmd/config
         run: |
 
+          # Prepare git
+          git config --global user.email "development@kustomize.io"
+          git config --global user.name "Development"
+
           # Release cmd/config
           make install-local-tools
           gorepomod release cmd/config ${{ inputs.release_type }} --local --doIt
       - name: Create release changelog
         run: |
-
-          # Prepare git
-          git config --global user.email "development@kustomize.io"
-          git config --global user.name "Development"
 
           # Create release draft
           changelog_file=$(mktemp)
