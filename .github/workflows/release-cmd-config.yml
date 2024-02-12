@@ -36,7 +36,7 @@ jobs:
       - name: Unit test
         id: unit_test
         run: |
-          
+
           # Run unit test
           echo "Executing unit test"
           go install github.com/jstemmer/go-junit-report@latest
