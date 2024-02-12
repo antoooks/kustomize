@@ -82,9 +82,9 @@ jobs:
           
           # Pin dependencies: kyaml, cmd/config, api
           # TODO: delete hardcoded version after stable
-          gorepomod pin kyaml v0.16.0 --local --doIt
-          gorepomod pin cmd/config v0.13.0 --local --doIt
-          gorepomod pin api v0.16.0 --local --doIt
+          gorepomod pin kyaml v0.16.0 --doIt
+          gorepomod pin cmd/config v0.13.0 --doIt
+          gorepomod pin api v0.16.0 --doIt
       - name: Build test
         run: |
           make build-kustomize-api
