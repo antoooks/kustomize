@@ -84,12 +84,6 @@ jobs:
       - name: Commit pinned dependencies
         run: |
 
-          # Prepare git
-          git config --global user.email "development@kustomize.io"
-          git config --global user.name "Development"
-          git remote add upstream "https://x-access-token:${GITHUB_TOKEN}@github.com/antoooks/kustomize.git"
-          git remote -v
-
           # Commit pinned dependencies and handle no commit          
           git add --all
           git commit -m "pin kyaml, cmd/config" || true
