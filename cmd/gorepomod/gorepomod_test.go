@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestListCommand(t *testing.T) {
@@ -43,7 +42,7 @@ func TestListCommand(t *testing.T) {
 		}
 		out, err := exec.Command(bash, "-c", tc.cmd).Output()
 		if err != nil {
-			require.Error(t, err, "exit status 1")
+			assert.Error(t, err, "exit status 1")
 		}
 		assert.Greater(t, len(string(out)), 1)
 	}
@@ -80,7 +79,44 @@ func TestPinCommand(t *testing.T) {
 		}
 		out, err := exec.Command(bash, "-c", tc.cmd).Output()
 		if err != nil {
-			require.Error(t, err, "exit status 1")
+			assert.Error(t, err, "exit status 1")
+		}
+		assert.Greater(t, len(string(out)), 1)
+	}
+}
+
+func TestReleaseCommand(t *testing.T) {
+	// Assuming gorepomod is installed
+	var testCases = map[string]struct {
+		isFork bool
+		cmd    string
+	}{
+		"upstreamWithLocalFlag": {
+			isFork: false,
+			cmd:    "cd ../.. && gorepomod release kyaml --local",
+		},
+		"upstreamWithNoLocalFlag": {
+			isFork: false,
+			cmd:    "cd ../.. && gorepomod release kyaml",
+		},
+		"forkWithLocalFlag": {
+			isFork: true,
+			cmd:    "cd ../.. && gorepomod release kyaml --local",
+		},
+		"forkWithNoLocalFlag": {
+			isFork: true,
+			cmd:    "cd ../.. && gorepomod release kyaml",
+		},
+	}
+
+	for _, tc := range testCases {
+		bash, err := exec.LookPath("bash")
+		if err != nil {
+			t.Error("bash not found")
+		}
+		out, err := exec.Command(bash, "-c", tc.cmd).Output()
+		if err != nil {
+			assert.Error(t, err, "exit status 1")
 		}
 		assert.Greater(t, len(string(out)), 1)
 	}
