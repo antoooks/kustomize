@@ -90,6 +90,7 @@ jobs:
           # Prepare git
           git config --global user.email "development@kustomize.io"
           git config --global user.name "Development"
+          git checkout ${{inputs.release_branch}}
 
           # Release kyaml
           make install-tools
