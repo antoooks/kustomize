@@ -6,7 +6,6 @@ package repo
 import (
 	"fmt"
 	"strconv"
-	"strings"
 
 	"sigs.k8s.io/kustomize/cmd/gorepomod/internal/edit"
 	"sigs.k8s.io/kustomize/cmd/gorepomod/internal/git"
@@ -144,13 +143,17 @@ func (mgr *Manager) Release(
 
 	gr := git.NewLoud(mgr.AbsPath(), doIt, localFlag)
 
-	newVersionString := strings.Split(gr.GetCurrentVersionFromHead(), "/")
+	newVersionString, err := gr.GetLatestTag(string(target.ShortName()))
+
+	if err != nil {
+		return fmt.Errorf("error getting latest version from branch name")
+	}
 
 	if len(newVersionString) == 0 {
 		return fmt.Errorf("error getting version from remote")
 	}
 
-	newVersion, err := semver.Parse(newVersionString[1])
+	newVersion, err := semver.Parse(newVersionString)
 	if err != nil {
 		return fmt.Errorf("error parsing version string: \"%s\"", newVersionString)
 	}
