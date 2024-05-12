@@ -153,11 +153,11 @@ func (mgr *Manager) Release(
 		return fmt.Errorf("error getting version from remote")
 	}
 
-	newVersion, err := semver.Parse(newVersionString)
+	newVersionSv, err := semver.Parse(newVersionString)
 	if err != nil {
 		return fmt.Errorf("error parsing version string: \"%s\"", newVersionString)
 	}
-
+	newVersion := newVersionSv.Bump(bump)
 	if newVersion.Equals(target.VersionRemote()) {
 		return fmt.Errorf(
 			"version %s already exists on remote - delete it first", newVersion)
