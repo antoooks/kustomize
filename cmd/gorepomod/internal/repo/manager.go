@@ -144,17 +144,17 @@ func (mgr *Manager) Release(
 	gr := git.NewLoud(mgr.AbsPath(), doIt, localFlag)
 
 	// e.g. get v0.17.1 from release-kyaml-v0.17.1
+	// guaranteed to be the newest version because bumping is done in ./releasing/create-release.sh
 	newVersionString := gr.GetCurrentVersionFromBranchName()
 
 	if len(newVersionString) == 0 {
 		return fmt.Errorf("error getting version from remote")
 	}
 
-	newVersionSv, err := semver.Parse(string(newVersionString))
+	newVersion, err := semver.Parse(string(newVersionString))
 	if err != nil {
 		return fmt.Errorf("error parsing version string: \"%s\"", newVersionString)
 	}
-	newVersion := newVersionSv.Bump(bump)
 	if newVersion.Equals(target.VersionRemote()) {
 		return fmt.Errorf(
 			"version %s already exists on remote - delete it first", newVersion)
