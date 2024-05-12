@@ -47,7 +47,7 @@ function create_release {
   git fetch --tags upstream $upstream_master
   git branch $release_branch $origin_master
   git commit -a -m "create release branch $release_branch" || true
-  git push -f origin $origin_master
+  git push -f origin $origin_master --tags
 
   # Trigger workflow for respective modeule release
   gh workflow run "release-${module_slugified}.yml" -f "release_type=${release_type}" -f "release_branch=${release_branch}"
