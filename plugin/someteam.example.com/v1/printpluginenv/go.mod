@@ -32,5 +32,3 @@ require (
 )
 
 replace sigs.k8s.io/kustomize/api => ../../../../api
-
-replace sigs.k8s.io/kustomize/kyaml => ../../../../kyaml
